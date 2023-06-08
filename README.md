@@ -1,3 +1,4 @@
+## Code for this project: https://colab.research.google.com/drive/1XBswZhBrxGVlpAlvlApV8hhh1uW_J-F4?usp=sharing
 # Problem Statement
 For my project my goal was to create an image classifier neural network model in pytorch that is built specifically to classify common household items with at least 75% accuracy, this classification will take place across 10 items; clock, computer keyboard, lamp, telephone, television, bed, chair, couch, table, and wardrobe. I originally was just going to make one model for this, however after discovering different strategies for accomplishing this task I ended up creating 3 different models, one using a modified ResNet, another using a modified AlexNet, and finally a Simple neural network I designed myself. My goal became to train these neural networks on the same data and see which generalized the best and try to understand why.
 # Video Walkthrough
