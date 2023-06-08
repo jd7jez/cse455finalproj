@@ -7,4 +7,30 @@ The data I used for this project was collected from the CIFAR-100 dataset on kag
 # Hyperparameter Tuning
 The only hyperparameter I tuned on these models was the learning rate. To do this I iterated over the learning rates 0.01, 0.001, 0.0001, and 0.00001 for each model. I trained them over 1 epoch and then chose the learning rate that had the highest validation accuracy for each model. This was 0.001 for both FresNet and FalexNet, however the optimal learning rate for SimpNet was 0.0001.
 # Training
-I trained each model over 10 epochs with a batch size of 16 from the training dataloader and the respective optimal learning rates for each model. After some research online I learned of a technique call learning rate scheduling where the learning rate is decreased during the training process, I utilized this technique in the training of all 3 models. After the 5th epoch, the learning rate decreases by a factor of 10. The idea here is that the model will make smaller adjustments to the weights after it has already honed the weights quite a bit, this way the weights can be more finely tuned than they could with a larger learning rate.
+I trained each model over 10 epochs with a batch size of 16 from the training dataloader and the respective optimal learning rates for each model. After some research online I learned of a technique call learning rate scheduling where the learning rate is decreased during the training process, I utilized this technique in the training of all 3 models. After the 5th epoch, the learning rate decreases by a factor of 10. The idea here is that the model will make smaller adjustments to the weights after it has already honed the weights quite a bit, this way the weights can be more finely tuned than they could with a larger learning rate. During training I will save the average training loss and accuracy, and the average validation loss and accuracy or each epoch. This way these values can be visualized later. As stated previously, I used all default hyperparameters except for learning rate, I also used the NLLLoss function and the Adam optimizer built into pytorch.
+# Testing
+After each model was trained, I saved the version of that model at whichever epoch had the highest average validation accuracy to ensure I had the best model for testing. I then tested each trained model on the testing data using batch sizes of 16. I saved the average testing loss and accuracy for each model.
+# Results
+After training all 3 models as described above, I obtained the results visualized below.
+![image](https://github.com/jd7jez/cse455finalproj/assets/45610092/94aaf520-5589-471a-ac65-731964bf22f4)  
+The best average validation accuracy for each model was:  
+FresNet : 72%  
+FalexNet : 79.6%  
+SimpNet : 47.9%  
+The best average training accuracy for each model was:  
+FresNet : 67.6%  
+FalexNet : 95.4%  
+SimpNet : 91.7%  
+The results of testing each model on the testing data were as follows:  
+FresNet Loss : 0.835  
+FalexNet Loss : 0.836  
+SimpNet Loss : 1.790  
+FresNet Accuracy : 70.6%  
+FalexNet Accuracy : 78.6%  
+SimpNet Accuracy : 47%  
+# Analysis
+The FalexNet model was the best performing model with 78.6% testing accuracy, this model achieved my goal of 75% accuracy! I have two theories for why this was the case.  
+**Theory 1:** The CIFAR-100 dataset consists of 32x32 images, these images are very small. FalexNet is a relatively small neural network, meaning the patters it learns cannot be too complex. I believe FalexNet is just complex enough to learn the patterns in these 32x32 images very well without taking too long to learn them. FresNet is a very complex neural network, so it is either looking for too complex of a relationship between the images and their labels, or it is just taking too long to train. SimpNet is just too simple (ironically), it cannot capture the relationship well enough in the time given to make great predictions.  
+**Theory 2:** FalexNet just had the most ideal hyperparameters for this training process. As my time is limited, I was not able to super thoroughly search for all of the best hyperaparameters for each model. So it is possible that one of the other models would perform better in the time given if they had better hyperparameters. However, FalexNet just got lucky with the hyperparameters it had and was able to learn the relationship very well.  
+Towards the 10th epoch, both FresNet and AlexNet saw a drop/plateau in validation accuracy. In the case of FresNet, I believe this was because the model was stuck in a local minimum of the weight changes, and the learning rate was not large enough to escape this minima. In the case of FalexNet, I think the model began memorizing the training data, so it became worse at generalizing, this is backed up by the fact the training accuracy reached 95.4% SimpNet seemed to do a similar thing, it became extremely good classifying the training data with an accuracy of 91.7%, but was bad at generalizing. If I were to go back and try and fix this issue, I would transform my training data randomly each time it is loaded, so each image looks different every time and the model cannot memorize it.  
+The scheduled learning rate drop seemed to have no effect on SimpNet, except it maybe memorized the training data slower. In the case of FresNet and FalexNet it seems the drop in learning rate really helped the training accuracy, but the validation accuracy was only helped by a few percentage points. I believe this scheduled learning rate drop was not very beneficial and just helps models better memorize training data, however it is very likely I just implemented it improperly. If I were to do this again, I would train each model with a single learning rate until it plateaus and then do the scheduled learning rate drop.
